@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedal Soruları</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--ink:#2b2622;--mute:#7a6f66;--line:#e6ded3;--acc:#c2410c;--acc2:#fff1e8;--ok:#15803d;--bar:#eadfce}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1917;--card:#292524;--ink:#f5efe8;--mute:#a8a29e;--line:#44403c;--acc:#fb923c;--acc2:#3a2a20;--ok:#4ade80;--bar:#44403c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
+.wrap{max-width:720px;margin:0 auto}
+h1{font-size:20px;margin:0 0 6px}
+.bar{height:8px;background:var(--bar);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--mute);margin-top:4px;flex-wrap:wrap}
+main{padding:16px}
+.intro{background:var(--acc2);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.intro p{margin:0 0 8px}.intro p:last-child{margin:0}
+label.name{display:block;margin:12px 0 0;font-weight:600}
+input[type=text],textarea{width:100%;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:72px;resize:vertical}
+.filter{display:flex;gap:8px;align-items:center;margin:0 0 8px;font-size:15px}
+nav.sections{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px}
+nav.sections a{white-space:nowrap;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:14px}
+h2{font-size:19px;margin:28px 0 10px;padding-top:6px;scroll-margin-top:90px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:0 0 12px;scroll-margin-top:90px}
+.q.done{border-color:var(--ok)}
+.qh{display:flex;gap:10px;align-items:flex-start}
+.qn{flex:none;font-size:13px;font-weight:700;color:var(--acc);background:var(--acc2);border-radius:8px;padding:2px 8px;margin-top:3px}
+.qt{font-weight:600}
+.badge{font-size:12px;color:var(--mute);margin-left:6px;font-weight:400}
+.extra{color:var(--mute);font-size:15px;margin:4px 0 0}
+.note{font-size:15px;color:var(--mute);background:var(--bg);border-radius:10px;padding:8px 10px;margin:8px 0 0}
+details{margin:8px 0 0;font-size:14px;color:var(--mute)}summary{cursor:pointer}
+.opts{display:flex;flex-direction:column;gap:8px;margin:12px 0 0}
+.opt{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;cursor:pointer;background:var(--card)}
+.opt input{width:20px;height:20px;accent-color:var(--acc);flex:none;margin:0}
+.opt.on{border-color:var(--acc);background:var(--acc2)}
+.free{margin-top:10px}
+.free small{display:block;color:var(--mute);margin-bottom:4px;font-size:13px}
+.clear{background:none;border:0;color:var(--mute);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px 0 0}
+.hidden{display:none!important}
+footer{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px}
+footer .wrap{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.saved{font-size:14px;color:var(--ok)}
+button.pri{font:inherit;font-weight:600;background:var(--acc);color:#fff;border:0;border-radius:12px;padding:12px 18px;cursor:pointer}
+button.sec{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+dialog{width:min(680px,94vw);border:1px solid var(--line);border-radius:16px;background:var(--bg);color:var(--ink);padding:16px}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog textarea{min-height:40vh;font-size:14px;font-family:ui-monospace,Menlo,monospace}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>🎸 Pedal Soruları</h1>
+  <div class="bar"><i id="barfill"></i></div>
+  <div class="meta"><span id="count">0 / 0 cevaplandı</span><span id="saved" class="saved"></span></div>
+</div></header>
+
+<main><div class="wrap">
+  <div class="intro">
+    <p><b>Merhaba!</b> Doğru ya da yanlış cevap yok. İlk aklına geleni seç ya da kendi cümlelerinle yaz. "Bilmiyorum" da gayet güzel bir cevap.</p>
+    <p>Her cevap <b>kendiliğinden kaydedilir</b> (bu telefonda/bilgisayarda). İstediğin zaman kapatıp geri gelebilir, cevapları değiştirebilirsin. Bitirince alttaki <b>"Cevapları gönder"</b> düğmesine bas.</p>
+    <label class="name">Adın <input type="text" id="who" placeholder="İstersen yaz"></label>
+  </div>
+  <div class="filter"><label><input type="checkbox" id="onlyMust"> Sadece önce cevaplanması gerekenleri göster</label></div>
+  <nav class="sections" id="nav"></nav>
+  <div id="content"></div>
+</div></main>
+
+<footer><div class="wrap">
+  <span class="saved" id="saved2"></span>
+  <button class="pri" id="send">📤 Cevapları gönder</button>
+</div></footer>
+
+<dialog id="dlg">
+  <b>Cevapların</b>
+  <p style="margin:6px 0;color:var(--mute);font-size:14px">"Kopyala"ya bas, mesajla (WhatsApp vb.) yapıştırıp gönder. Ya da dosya olarak indir.</p>
+  <textarea id="out" readonly></textarea>
+  <div class="row">
+    <button class="pri" id="copy">📋 Kopyala</button>
+    <button class="sec" id="dltxt">⬇️ Metin dosyası</button>
+    <button class="sec" id="dljson">⬇️ Yedek (.json)</button>
+    <button class="sec" id="imp">⬆️ Yedek yükle</button>
+    <button class="sec" id="close">Kapat</button>
+  </div>
+  <input type="file" id="file" accept=".json,application/json" class="hidden">
+</dialog>
+
+<script>
+const DATA = __DATA__;
+const KEY = "pedal-muzisyen-v1";
+let state = {who:"", a:{}};
+try { const s = localStorage.getItem(KEY); if (s) state = JSON.parse(s); } catch(e){}
+if(!state.a) state.a = {};
+const $ = id => document.getElementById(id);
+let saveTimer;
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); flash("Kaydedildi ✓"); }
+  catch(e){ flash("Kaydedilemedi — sonda 'Cevapları gönder' ile yedek al"); }
+}
+function flash(t){ $("saved").textContent=t; $("saved2").textContent=t; clearTimeout(saveTimer); saveTimer=setTimeout(()=>{$("saved").textContent="";$("saved2").textContent="";},2000); }
+const ans = id => state.a[id] || (state.a[id]={sel:[],text:""});
+const isDone = id => { const a=state.a[id]; return !!a && (a.sel.length>0 || a.text.trim()!==""); };
+function el(tag, attrs, ...kids){
+  const e=document.createElement(tag);
+  for(const k in (attrs||{})){ if(k==="class") e.className=attrs[k]; else if(k.startsWith("on")) e.addEventListener(k.slice(2),attrs[k]); else e.setAttribute(k,attrs[k]); }
+  for(const c of kids){ if(c==null) continue; e.append(c.nodeType?c:document.createTextNode(c)); }
+  return e;
+}
+const total = DATA.reduce((n,s)=>n+s.questions.length,0);
+function progress(){
+  const d = DATA.flatMap(s=>s.questions).filter(q=>isDone(q.id)).length;
+  $("count").textContent = d+" / "+total+" cevaplandı";
+  $("barfill").style.width = (100*d/total)+"%";
+  document.querySelectorAll(".q").forEach(c=>c.classList.toggle("done", isDone(c.dataset.id)));
+}
+function build(){
+  const nav=$("nav"), root=$("content");
+  nav.replaceChildren(); root.replaceChildren();
+  $("who").value = state.who||"";
+  DATA.forEach(sec=>{
+    nav.append(el("a",{href:"#sec-"+sec.id}, sec.id+". "+sec.title));
+    root.append(el("h2",{id:"sec-"+sec.id}, sec.id+". "+sec.title));
+    sec.questions.forEach(q=>{
+      const a = state.a[q.id]||{sel:[],text:""};
+      const card = el("div",{class:"q"+(q.tag==="sart"?" must":""),"data-id":q.id,id:"q-"+q.id});
+      card.append(el("div",{class:"qh"},
+        el("span",{class:"qn"},q.id),
+        el("div",{}, el("span",{class:"qt"},q.text),
+          q.tag==="sonra"?el("span",{class:"badge"},"(acelesi yok)"):null,
+          q.extra?el("div",{class:"extra"},q.extra):null)));
+      q.notes.forEach(n=>card.append(el("div",{class:"note"},n)));
+      if(q.why) card.append(el("details",{}, el("summary",{},"Neden soruyoruz?"), q.why));
+      if(q.options.length){
+        const box=el("div",{class:"opts"});
+        q.options.forEach(o=>{
+          const inp=el("input",{type:q.multi?"checkbox":"radio",name:"r-"+q.id});
+          inp.checked=a.sel.includes(o);
+          const lab=el("label",{class:"opt"+(inp.checked?" on":"")}, inp, o);
+          inp.addEventListener("change",()=>{
+            const A=ans(q.id);
+            if(q.multi){ A.sel = inp.checked ? [...A.sel,o] : A.sel.filter(x=>x!==o); }
+            else { A.sel=[o]; box.querySelectorAll(".opt").forEach(l=>l.classList.remove("on")); }
+            lab.classList.toggle("on",inp.checked);
+            save(); progress();
+          });
+          box.append(lab);
+        });
+        card.append(box);
+      }
+      const ta=el("textarea",{placeholder:q.options.length?"Başka bir şey ya da eklemek istediğin…":"Buraya yaz…"});
+      ta.value=a.text||"";
+      ta.addEventListener("input",()=>{ ans(q.id).text=ta.value; save(); progress(); });
+      card.append(el("div",{class:"free"}, q.options.length?el("small",{},"Diğer / not"):null, ta));
+      card.append(el("button",{class:"clear",type:"button",onclick:()=>{ state.a[q.id]={sel:[],text:""}; save(); build(); applyFilter(); progress(); }},"Cevabı temizle"));
+      root.append(card);
+    });
+  });
+  progress();
+}
+function applyFilter(){
+  const only=$("onlyMust").checked;
+  document.querySelectorAll(".q").forEach(c=>c.classList.toggle("hidden", only && !c.classList.contains("must")));
+}
+$("onlyMust").addEventListener("change",applyFilter);
+$("who").addEventListener("input",e=>{ state.who=e.target.value; save(); });
+
+function summary(){
+  let t="Müzisyen soruları — cevaplar\n"+(state.who?"İsim: "+state.who+"\n":"")+"Tarih: "+new Date().toLocaleDateString("tr-TR")+"\n";
+  DATA.forEach(sec=>{
+    t+="\n== "+sec.id+". "+sec.title+" ==\n";
+    sec.questions.forEach(q=>{
+      const a=state.a[q.id]; t+="\n"+q.id+". "+q.text+(q.extra?" "+q.extra:"")+"\n";
+      if(!isDone(q.id)) { t+="   (cevaplanmadı)\n"; return; }
+      if(a.sel.length) t+="   Seçim: "+a.sel.join(" | ")+"\n";
+      if(a.text.trim()) t+="   Not: "+a.text.trim().replace(/\n/g,"\n        ")+"\n";
+    });
+  });
+  return t;
+}
+function download(name,content,type){
+  const b=new Blob([content],{type}); const u=URL.createObjectURL(b);
+  const a=el("a",{href:u,download:name}); document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+$("send").onclick=()=>{ $("out").value=summary(); $("dlg").showModal(); };
+$("close").onclick=()=>$("dlg").close();
+$("copy").onclick=async()=>{
+  const ta=$("out");
+  try{ await navigator.clipboard.writeText(ta.value); }catch(e){ ta.removeAttribute("readonly"); ta.select(); document.execCommand("copy"); ta.setAttribute("readonly",""); }
+  $("copy").textContent="✓ Kopyalandı"; setTimeout(()=>$("copy").textContent="📋 Kopyala",2000);
+};
+$("dltxt").onclick=()=>download("pedal-cevaplar.txt",summary(),"text/plain");
+$("dljson").onclick=()=>download("pedal-cevaplar.json",JSON.stringify(state,null,1),"application/json");
+$("imp").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  f.text().then(t=>{ const o=JSON.parse(t); if(o&&o.a){ state=o; save(); build(); applyFilter(); $("dlg").close(); } else alert("Bu dosya geçerli görünmüyor."); }).catch(()=>alert("Dosya okunamadı."));
+};
+build();
+</script>
+</body>
+</html>
