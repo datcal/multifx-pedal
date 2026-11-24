@@ -1,4 +1,4 @@
-# LİSTE 2 — GELİŞTİRİCİ İÇİN SORULAR
+# LİSTE 2 — GELİŞTİRİCİ İÇİN SORULAR (v2: synth / davul makinesi / sampler / mikrofon)
 
 **Etiketler**
 - **[BAŞLAMADAN ŞART]** → Bu cevap olmadan tasarım/parça alımı yapılamaz.
@@ -6,6 +6,8 @@
 - **🔗 ÇAPRAZ-Xn** → Müzisyen listesinde aynı konuya soru var; cevaplar çelişebilir (kodlar listenin sonundaki tabloda).
 
 Şıklarda "Diğer / bilmiyorum" her zaman geçerli. Bilmiyorsan "bilmiyorum" yaz, ben "araştırılacak" diye işaretlerim.
+
+**Güncel bilgi (sonradan eklendi):** Çalgılar gitar değil; synth'ler (MS-20 vb.), theremin, davul makinesi, SP-404 MK2 ve mikrofon. İlk cihaz **1 stereo giriş + 1 stereo çıkış**, üst üste dizilebilen efektler ve **çalgıya göre ayrı preset**. İleride (1 cihaz oturunca) 2. cihaz ve belki **az PCB ile MCU + geliştirme kartı** düşünülüyor; Pi pahalı bulunuyor. Bu yüzden bölüm **O** eklendi.
 
 ---
 
@@ -34,12 +36,12 @@
  > Neden önemli: Gecikme, gürültü, seviye uyumu, ve kutuya sığması bu seçime bağlı.
 
 **G7. Kaç ses girişi gerekir ve hangi tür?** [BAŞLAMADAN ŞART] 🔗 X1
- A) 1 enstrüman girişi  B) 1 enstrüman + 1 mikrofon/hat  C) 2 enstrüman  D) Diğer: ____
- > Neden önemli: Müzisyenin M2 cevabıyla birlikte giriş sayısı ve kart seçimi belli olacak.
+ A) 1 stereo hat girişi (müzisyen: ilk cihaz için bu)  B) 1 stereo hat + 1 mikrofon girişi  C) 2 stereo hat girişi  D) Çok kanallı  E) Diğer: ____
+ > Neden önemli: Giriş sayısı ve türü ses kartı seçimini belirler; müzisyen cevapları (M1, M3, M4, M6, M12) ile birlikte karara bağlanacak.
 
-**G8. Enstrüman girişi için yüksek empedans (Hi-Z) nasıl sağlanacak ve hedef giriş seviyesi aralığı nedir?** [BAŞLAMADAN ŞART] 🔗 X1
- A) Kartın kendi Hi-Z girişi  B) Harici DI/buffer devresi  C) Hat seviyesi cihazla beslenecek  D) Bilmiyorum
- > Neden önemli: Gitar pikapları doğrudan standart ses kartına bağlanınca ses kısık ve donuk olur.
+**G8. Giriş seviyesi aralığı nedir ve hangi seviyeler desteklenecek?** [BAŞLAMADAN ŞART] 🔗 X1
+ A) Sadece hat seviyesi (synth, davul makinesi, SP-404)  B) Hat + modüler (yüksek) seviye  C) Hat + mikrofon (önyükselticili)  D) Bilmiyorum
+ > Neden önemli: Gitar girişi (Hi-Z) artık gerekmiyor, ama modüler seviyeli bir kaynak girişi bozar, mikrofon için ayrı yükseltici (ve kondansatör mikrofon için 48 V) gerekir.
 
 **G9. Kaç ses çıkışı gerekir ve hangi tür?** [BAŞLAMADAN ŞART] 🔗 X1 🔗 X2
  A) 1 mono hat çıkışı  B) 2 (stereo) hat çıkışı  C) Stereo + ayrı kulaklık çıkışı  D) Diğer: ____
@@ -49,7 +51,7 @@
  A) Baştan sona mono  B) Mono giriş, stereo çıkış (reverb vb. stereo)  C) Tam stereo  D) Efekte göre
  > Neden önemli: Stereo, CPU yükünü ve plugin seçimini önemli ölçüde değiştirir.
 
-**G11. Çıkış seviyesi hedefi nedir (amfi girişine, mikserin hat girişine, kulaklığa)?** [BAŞLAMADAN ŞART] 🔗 X1
+**G11. Çıkış seviyesi hedefi nedir (mikserin hat girişine, aktif hoparlöre, kulaklığa)?** [BAŞLAMADAN ŞART] 🔗 X1
  > Neden önemli: Çıkış seviyesi uyumsuzsa ya bozulma ya zayıf ses olur; ayrıca dengeli (TRS) çıkış gerekip gerekmediği buna bağlı.
 
 **G12. Örnekleme hızı ve bit derinliği tercihin var mı (44.1/48/96 kHz, 16/24/32 bit)?** [BAŞLAMADAN ŞART]
@@ -59,7 +61,7 @@
 
 **G13. Hedef gecikme nedir (giriş-çıkış toplam)?** [BAŞLAMADAN ŞART] 🔗 X8
  A) 5 ms altı  B) 5–10 ms  C) 10–20 ms  D) Ölçüp karar veririm
- > Neden önemli: Gitar çalmada 10 ms üstü hissedilebilir; hedef, buffer ve donanım kararlarını sınırlar.
+ > Neden önemli: Canlı çalmada (tuşa basınca ses beklenirken) 10 ms üstü hissedilebilir; hedef, buffer ve donanım kararlarını sınırlar.
 
 **G14. Buffer (period) boyutu ve sayısı için bir başlangıç beklentin var mı (örn. 64/128 frame × 2/3)?** [SONRA KARARLAŞTIRILIR] 🔗 X8
  > Neden önemli: Küçük buffer az gecikme demektir ama xrun (ses kopması) riskini artırır.
@@ -106,14 +108,14 @@
 
 ## D. Plugin seçimi ve CPU bütçesi
 
-**G27. Hangi LV2 plugin paketlerini düşünüyorsun?** (Örn. Guitarix, Calf, x42, MOD plugin'leri, ToneX/NAM, ZynAddSubFX, DISTRHO, Invada) [BAŞLAMADAN ŞART] 🔗 X3
+**G27. Hangi LV2 plugin paketlerini düşünüyorsun?** (Örn. Calf, x42, MOD plugin'leri, Dragonfly Reverb, Invada, DISTRHO, Guitarix içindeki genel efektler) [BAŞLAMADAN ŞART] 🔗 X3
  > Neden önemli: Paket seçimi lisansı, bağımlılığı ve her efektin CPU maliyetini belirler.
 
 **G28. Efektlerin CPU bütçesi: aynı anda kaç efekt çalışmalı ve toplam CPU yükü hedefin (% olarak) nedir?** [BAŞLAMADAN ŞART] 🔗 X3
- > Neden önemli: Pi 4'te ağır plugin'lerin (reverb, amfi sim) toplamı hızla sınırı aşabilir.
+ > Neden önemli: Pi 4'te ağır plugin'lerin (reverb, granüler, vocoder) toplamı hızla sınırı aşabilir.
 
-**G29. Amfi/hoparlör modelleme (NAM, IR/konvolüsyon) istenecek mi?** [BAŞLAMADAN ŞART] 🔗 X3
- > Neden önemli: Bunlar Pi 4'te en ağır işlerdir; müzisyenin M5 cevabıyla çelişebilir.
+**G29. Ağır efektler (uzun reverb, granüler, vocoder, pitch shifter) istenecek mi ve hangi kalitede?** [BAŞLAMADAN ŞART] 🔗 X3
+ > Neden önemli: Bunlar Pi 4'te (ve MCU'da çok daha fazla) en ağır işlerdir; müzisyenin M14 ve M16 cevaplarıyla çelişebilir.
 
 **G30. Plugin lisansları (GPL vb.) önemli mi? Cihazı ileride dağıtma/satma ihtimali var mı?** [SONRA KARARLAŞTIRILIR]
  > Neden önemli: Lisanslar dağıtım koşullarını belirler.
@@ -130,8 +132,8 @@
 **G33. Tap tempo ve efektlerin tempoya senkron çalışması için mod-host tarafında ne gerekiyor (BPM parametresi, transport)?** [SONRA KARARLAŞTIRILIR] 🔗 X11
  > Neden önemli: Her plugin tempoyu aynı şekilde desteklemez.
 
-**G34. Ekspresyon pedalı (analog) ve MIDI girişi için donanım yer ayıracak mısın?** [SONRA KARARLAŞTIRILIR] 🔗 X11
- > Neden önemli: Sonradan eklemek kutuyu yeniden basmayı gerektirebilir.
+**G34. MIDI girişi (clock ve program change için), USB-MIDI ve ekspresyon pedalı için donanım yer ayıracak mısın?** [SONRA KARARLAŞTIRILIR] 🔗 X11
+ > Neden önemli: Müzisyen M47'de davul makinesinden tempo almak istediğini söyleyebilir; sonradan eklemek kutuyu yeniden basmayı gerektirebilir.
 
 ## F. Zincir yapısı ve preset veri modeli
 
@@ -141,10 +143,10 @@
 
 **G36. Preset geçişinde ses kesintisi nasıl ele alınacak?** [BAŞLAMADAN ŞART] 🔗 X4
  A) Zinciri kapatıp yenisini yükle (sessizlik olur)  B) İki zincir paralel, çapraz geçiş  C) Aynı efektler açık, sadece parametreler değişir  D) Bilmiyorum
- > Neden önemli: Müzisyenin M24–M25 cevabı ile teknik olarak yapılabilir olan burada karşılaşacak.
+ > Neden önemli: Müzisyenin M33–M34 cevabı ile teknik olarak yapılabilir olan burada karşılaşacak.
 
-**G37. Preset veri modeli nasıl olmalı (zincir, parametreler, sıra, enstrüman, ses seviyesi, tempo)?** [BAŞLAMADAN ŞART] 🔗 X13
- > Neden önemli: Sonradan değiştirilmesi zor bir karar; sürüm geçişleri için de şema sürümü gerekir.
+**G37. Preset veri modeli nasıl olmalı (zincir, parametreler, sıra, çalgı grubu/profili, ses seviyesi, tempo)?** [BAŞLAMADAN ŞART] 🔗 X13
+ > Neden önemli: Preset'ler çalgıya göre gruplanacak (müzisyen M29–M32); bu yapı sonradan değiştirilmesi zor bir karar ve sürüm geçişleri için şema sürümü gerekir.
 
 **G38. Preset'ler hangi biçimde ve nerede saklanacak (JSON dosyaları, SQLite, başka)?** [BAŞLAMADAN ŞART] 🔗 X13
  > Neden önemli: Salt okunur dosya sisteminde yazılabilir bir bölüm (veri bölümü) gerekir; bozulma ve atomik yazma önemli.
@@ -240,7 +242,7 @@
  > Neden önemli: Pi 4'ün güç ihtiyacı (5V/3A) ile 9V pedal standardı arasında dönüştürme gerekir; güç sorunu "düşük voltaj" ve ses gürültüsüne yol açar.
 
 **G64. Ses kartı ve Pi'yi ayrı güç hattından beslemek, güç filtresi veya izolasyon (ground loop) önlemleri düşünüyor musun?** [BAŞLAMADAN ŞART] 🔗 X10
- > Neden önemli: Anahtarlamalı güç kaynaklarının gürültüsü gitar sinyalinde duyulur.
+ > Neden önemli: Anahtarlamalı güç kaynaklarının gürültüsü ses sinyalinde (özellikle sessiz anlarda) duyulur.
 
 **G65. Cihazın güç tüketimi ve ısı hedefi (kutu içi sıcaklık, fan gürültüsü)?** [SONRA KARARLAŞTIRILIR] 🔗 X10
  > Neden önemli: Fan sesi mikrofona karışır, fansız soğutmada kutu sıcaklığı sınırı vardır.
@@ -301,21 +303,43 @@
 **G82. PiPedal'ın hangi kısımlarını inceleyeceksin ve kodundan neyi alıp neyi kendi yazacaksın?** [SONRA KARARLAŞTIRILIR]
  > Neden önemli: Lisans ve bakım yükü, ayrıca "web arayüzü istemiyoruz" kararıyla uyum.
 
+## O. Platform ve gelecek (Pi → MCU olasılığı)
+
+**G83. İkinci cihazı ya da MCU'ya geçişi ne zaman düşünüyorsun ve hedef platform ne olurdu?** [BAŞLAMADAN ŞART]
+ A) Pi 4 ile kalırım  B) Geliştirme kartı + az PCB (örn. Daisy Seed, Teensy 4.x ses kartlı, STM32 kartları)  C) Henüz bilmiyorum  D) Diğer: ____
+ > Neden önemli: Bu karar, bugün yazılacak ses motoru, efekt formatı ve arayüzün ne kadar yeniden kullanılabilir olacağını belirler.
+
+**G84. Hedef birim maliyetin nedir ve kaç adet yapmayı düşünüyorsun (kişisel 1–2 adet mi, satış mı)?** [BAŞLAMADAN ŞART]
+ > Neden önemli: Pi 4 + ekran + ses kartı maliyeti ile MCU kartı + ekran maliyetinin farkı bu soruya göre anlamlı olur.
+
+**G85. MCU yolunda efektleri nasıl elde edeceksin?** [BAŞLAMADAN ŞART]
+ A) Kendim yazarım (DSP)  B) Hazır MCU kütüphaneleri  C) Bilmiyorum
+ > Neden önemli: Pi'deki hazır LV2 plugin'leri MCU'da çalışmaz; bu yolda efektlerin büyük bölümünü yeniden yazman gerekir ve iş yükü çok farklıdır.
+
+**G86. Preset ve zincir tanımını platformdan bağımsız (taşınabilir) bir biçimde mi tutmak istiyorsun?** [BAŞLAMADAN ŞART] 🔗 X13
+ > Neden önemli: Taşınabilir bir biçim, müzisyenin ayarlarının Pi'den MCU'ya geçişte kaybolmamasını sağlar.
+
+**G87. Arayüzü (Rust + Slint) ileride MCU'ya da taşınabilir tutmak istiyor musun?** [SONRA KARARLAŞTIRILIR]
+ > Neden önemli: Bu seçim ekran türünü (dokunmatik mi, küçük ekran + düğme mi) ve arayüz kodunun nasıl yazılacağını etkiler.
+
+**G88. İlk cihaz için "bitti" ölçütün nedir?** (Örn. tek stereo giriş/çıkış, en az N efekt, çalgı başına M preset, açılış X sn) [BAŞLAMADAN ŞART]
+ > Neden önemli: İkinci cihaza geçmeden önce ilk cihazın başarısını ölçecek net bir tanım gerekir.
+
 ---
 
 ### Çapraz-konu özet tablosu
 | Kod | Konu | Bu listede | Müzisyen listesinde |
 |---|---|---|---|
-| X1 | Giriş/çıkış, sinyal yolu | G6–G9, G11 | M2, M4 |
-| X2 | Mono/stereo | G9, G10 | M6 |
-| X3 | Efekt sayısı, CPU | G27–G29 | M9, M11 |
-| X4 | Preset geçişinde ses | G36 | M24, M25, M63 |
-| X5 | Knob/buton/LED | G46–G51, G55 | M15–M20, M53 |
-| X6 | Ekran, dokunmatik | G2, G40–G43, G72 | M21, M28, M29, M58 |
-| X7 | Açılış, çökme, fiş çekme | G5, G23, G45, G56–G59 | M45–M47, M64 |
-| X8 | Gecikme | G13–G16 | M60, M61 |
-| X9 | Boyut, görünüm | G69, G70, G73 | M49–M52 |
-| X10 | Güç, gürültü | G52, G63–G65 | (müzisyen duyduğu gürültüyü M60'ta anlatabilir) |
-| X11 | Tuner/looper/tempo/pedal | G32–G34 | M34–M40 |
-| X12 | Kullanım ortamı, dayanıklılık | G66, G68, G71 | M30, M42–M44 |
-| X13 | Yedek, güncelleme, preset kaybı | G37–G39, G61, G62 | M26 |
+| X1 | Giriş/çıkış, sinyal yolu | G6–G9, G11 | M1, M3, M4, M6, M7, M11, M12 |
+| X2 | Mono/stereo | G9, G10 | M8, M9 |
+| X3 | Efekt sayısı, CPU | G27–G29 | M14, M16 |
+| X4 | Preset geçişinde ses | G36 | M29–M34, M37, M71 |
+| X5 | Knob/buton/LED | G46–G51, G55 | M20, M22–M26, M61 |
+| X6 | Ekran, dokunmatik | G2, G40–G43, G72 | M28, M38, M39, M66 |
+| X7 | Açılış, çökme, fiş çekme | G5, G23, G45, G56–G59 | M53–M55, M72 |
+| X8 | Gecikme | G13–G16 | M68, M69 |
+| X9 | Boyut, görünüm | G69, G70, G73 | M23, M57–M60 |
+| X10 | Güç, gürültü | G52, G63–G65 | M13 |
+| X11 | Tuner/looper/tempo/pedal | G32–G34 | M21, M44–M48 |
+| X12 | Kullanım ortamı, dayanıklılık | G66, G68, G71 | M40, M50–M52, M62 |
+| X13 | Yedek, güncelleme, preset kaybı | G37–G39, G61, G62, G86 | M36 |
